@@ -560,6 +560,13 @@ public class DmmParsingProfile extends SiteParsingProfile implements SpecificPro
 					+ actressID + "/";
 			try {
 				Document actressPage = Jsoup.connect(actressPageURL).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE)
+						.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
+						.header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+						.header("Accept-Encoding", "gzip, deflate")
+						.header("Accept-Language", "zh-CN,zh;q=0.9")
+						.header("Upgrade-Insecure-Requests", "1")
+						.header("Connection", "keep-alive")
+						.header("Cookie", "rtt=xjmx6Q9Vt6cd7LiT05x3WdEBrtMrQ7MVeWjc148jYhO3%2BosfSwmuqxhlrkoknBAUvxWwAv5Iy8er2lpw3xTdElvtKtUsQKBXi73vOj6SweT3HseCRr9URNuFiljDBSPuzk59rVsZSHE8jhctw0pDB67kszWWPEKVNPtRRvHQjBAMbKRs18LVDwsN78PKB1HGHEOVgqJXy6eXhO6gLN8JbpeXdLk%3D; lg=zh; ab=a; ex=USD; gid=UoFfNDEto5dgH7%2BiACzCLBYq538L1KA3gnTf187N5w2KXUhs4ytvPv39SRvm23wvx%2Fk0f26ZosBy38PWrdZjW3DOQmE%3D; _ga=GA1.2.161111165.1541821215; _gid=GA1.2.2040351927.1541821215; i3_ab=8833; bh=eyJwcHBkMDA2NzdkbDYiOiJtb3ZpZXMiLCJwcHBkMDA2NzZkbDYiOiJtb3ZpZXMifQ%3D%3D")
 						.get();
 				Element actressNameElement = actressPage.select("td.t1 h1")
 						.first();
@@ -717,7 +724,15 @@ public class DmmParsingProfile extends SiteParsingProfile implements SpecificPro
 	@Override
 	public SearchResult[] getSearchResults(String searchString) throws IOException {
 		boolean firstPageScraping = true;
-		Document searchResultsPage = Jsoup.connect(searchString).timeout(CONNECTION_TIMEOUT_VALUE).get();
+		Document searchResultsPage = Jsoup.connect(searchString).timeout(CONNECTION_TIMEOUT_VALUE)
+				.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
+				.header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+				.header("Accept-Encoding", "gzip, deflate")
+				.header("Accept-Language", "zh-CN,zh;q=0.9")
+				.header("Upgrade-Insecure-Requests", "1")
+				.header("Connection", "keep-alive")
+				.header("Cookie", "rtt=xjmx6Q9Vt6cd7LiT05x3WdEBrtMrQ7MVeWjc148jYhO3%2BosfSwmuqxhlrkoknBAUvxWwAv5Iy8er2lpw3xTdElvtKtUsQKBXi73vOj6SweT3HseCRr9URNuFiljDBSPuzk59rVsZSHE8jhctw0pDB67kszWWPEKVNPtRRvHQjBAMbKRs18LVDwsN78PKB1HGHEOVgqJXy6eXhO6gLN8JbpeXdLk%3D; lg=zh; ab=a; ex=USD; gid=UoFfNDEto5dgH7%2BiACzCLBYq538L1KA3gnTf187N5w2KXUhs4ytvPv39SRvm23wvx%2Fk0f26ZosBy38PWrdZjW3DOQmE%3D; _ga=GA1.2.161111165.1541821215; _gid=GA1.2.2040351927.1541821215; i3_ab=8833; bh=eyJwcHBkMDA2NzdkbDYiOiJtb3ZpZXMiLCJwcHBkMDA2NzZkbDYiOiJtb3ZpZXMifQ%3D%3D")
+				.get();
 		Element nextPageLink = searchResultsPage.select("div.list-capt div.list-boxcaptside.list-boxpagenation ul li:not(.terminal) a").last();
 		ArrayList<SearchResult> searchResults = new ArrayList<>();
 		ArrayList<String> pagesVisited = new ArrayList<>();
@@ -786,7 +801,15 @@ public class DmmParsingProfile extends SiteParsingProfile implements SpecificPro
 		//TODO this is really not the cleanest way of doing this - I can probably find some way to make the selector not send me in a loop
 		//of pages, but this will work for now
 		if(nextPageLink != null && !pagesVisited.contains(nextPageURL))
-			searchResultsPage = Jsoup.connect(nextPageURL).get();
+			searchResultsPage = Jsoup.connect(nextPageURL)
+					.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
+					.header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+					.header("Accept-Encoding", "gzip, deflate")
+					.header("Accept-Language", "zh-CN,zh;q=0.9")
+					.header("Upgrade-Insecure-Requests", "1")
+					.header("Connection", "keep-alive")
+					.header("Cookie", "rtt=xjmx6Q9Vt6cd7LiT05x3WdEBrtMrQ7MVeWjc148jYhO3%2BosfSwmuqxhlrkoknBAUvxWwAv5Iy8er2lpw3xTdElvtKtUsQKBXi73vOj6SweT3HseCRr9URNuFiljDBSPuzk59rVsZSHE8jhctw0pDB67kszWWPEKVNPtRRvHQjBAMbKRs18LVDwsN78PKB1HGHEOVgqJXy6eXhO6gLN8JbpeXdLk%3D; lg=zh; ab=a; ex=USD; gid=UoFfNDEto5dgH7%2BiACzCLBYq538L1KA3gnTf187N5w2KXUhs4ytvPv39SRvm23wvx%2Fk0f26ZosBy38PWrdZjW3DOQmE%3D; _ga=GA1.2.161111165.1541821215; _gid=GA1.2.2040351927.1541821215; i3_ab=8833; bh=eyJwcHBkMDA2NzdkbDYiOiJtb3ZpZXMiLCJwcHBkMDA2NzZkbDYiOiJtb3ZpZXMifQ%3D%3D")
+					.get();
 		else
 			break;
 		

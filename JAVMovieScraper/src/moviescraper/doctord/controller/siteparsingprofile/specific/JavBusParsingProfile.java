@@ -69,7 +69,15 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 				if(urlOfCurrentPage.length() > 1)
 				{
 						try {
-							japaneseDocument = Jsoup.connect(urlOfCurrentPage).userAgent("Mozilla").ignoreHttpErrors(true).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
+							japaneseDocument = Jsoup.connect(urlOfCurrentPage)
+									.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
+									.header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+									.header("Accept-Encoding", "gzip, deflate")
+									.header("Accept-Language", "zh-CN,zh;q=0.9")
+									.header("Upgrade-Insecure-Requests", "1")
+									.header("Connection", "keep-alive")
+									.header("Cookie", "rtt=xjmx6Q9Vt6cd7LiT05x3WdEBrtMrQ7MVeWjc148jYhO3%2BosfSwmuqxhlrkoknBAUvxWwAv5Iy8er2lpw3xTdElvtKtUsQKBXi73vOj6SweT3HseCRr9URNuFiljDBSPuzk59rVsZSHE8jhctw0pDB67kszWWPEKVNPtRRvHQjBAMbKRs18LVDwsN78PKB1HGHEOVgqJXy6eXhO6gLN8JbpeXdLk%3D; lg=zh; ab=a; ex=USD; gid=UoFfNDEto5dgH7%2BiACzCLBYq538L1KA3gnTf187N5w2KXUhs4ytvPv39SRvm23wvx%2Fk0f26ZosBy38PWrdZjW3DOQmE%3D; _ga=GA1.2.161111165.1541821215; _gid=GA1.2.2040351927.1541821215; i3_ab=8833; bh=eyJwcHBkMDA2NzdkbDYiOiJtb3ZpZXMiLCJwcHBkMDA2NzZkbDYiOiJtb3ZpZXMifQ%3D%3D")
+									.ignoreHttpErrors(true).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -369,14 +377,30 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 			throws IOException {
 		ArrayList<SearchResult> linksList = new ArrayList<>();
 		try{
-			Document doc = Jsoup.connect(searchString).userAgent("Mozilla").ignoreHttpErrors(true).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
+			Document doc = Jsoup.connect(searchString)
+					.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
+					.header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+					.header("Accept-Encoding", "gzip, deflate")
+					.header("Accept-Language", "zh-CN,zh;q=0.9")
+					.header("Upgrade-Insecure-Requests", "1")
+					.header("Connection", "keep-alive")
+					.header("Cookie", "rtt=xjmx6Q9Vt6cd7LiT05x3WdEBrtMrQ7MVeWjc148jYhO3%2BosfSwmuqxhlrkoknBAUvxWwAv5Iy8er2lpw3xTdElvtKtUsQKBXi73vOj6SweT3HseCRr9URNuFiljDBSPuzk59rVsZSHE8jhctw0pDB67kszWWPEKVNPtRRvHQjBAMbKRs18LVDwsN78PKB1HGHEOVgqJXy6eXhO6gLN8JbpeXdLk%3D; lg=zh; ab=a; ex=USD; gid=UoFfNDEto5dgH7%2BiACzCLBYq538L1KA3gnTf187N5w2KXUhs4ytvPv39SRvm23wvx%2Fk0f26ZosBy38PWrdZjW3DOQmE%3D; _ga=GA1.2.161111165.1541821215; _gid=GA1.2.2040351927.1541821215; i3_ab=8833; bh=eyJwcHBkMDA2NzdkbDYiOiJtb3ZpZXMiLCJwcHBkMDA2NzZkbDYiOiJtb3ZpZXMifQ%3D%3D")
+					.ignoreHttpErrors(true).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
 			Elements videoLinksElements = doc.select("div.item");
 			if(videoLinksElements == null || videoLinksElements.size() == 0)
 			{
 				searchString = searchString.replace("/search/", "/uncensored/search/");
 				isCensoredSearch = false;
 			}
-			doc = Jsoup.connect(searchString).userAgent("Mozilla").ignoreHttpErrors(true).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
+			doc = Jsoup.connect(searchString)
+					.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
+					.header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+					.header("Accept-Encoding", "gzip, deflate")
+					.header("Accept-Language", "zh-CN,zh;q=0.9")
+					.header("Upgrade-Insecure-Requests", "1")
+					.header("Connection", "keep-alive")
+					.header("Cookie", "rtt=xjmx6Q9Vt6cd7LiT05x3WdEBrtMrQ7MVeWjc148jYhO3%2BosfSwmuqxhlrkoknBAUvxWwAv5Iy8er2lpw3xTdElvtKtUsQKBXi73vOj6SweT3HseCRr9URNuFiljDBSPuzk59rVsZSHE8jhctw0pDB67kszWWPEKVNPtRRvHQjBAMbKRs18LVDwsN78PKB1HGHEOVgqJXy6eXhO6gLN8JbpeXdLk%3D; lg=zh; ab=a; ex=USD; gid=UoFfNDEto5dgH7%2BiACzCLBYq538L1KA3gnTf187N5w2KXUhs4ytvPv39SRvm23wvx%2Fk0f26ZosBy38PWrdZjW3DOQmE%3D; _ga=GA1.2.161111165.1541821215; _gid=GA1.2.2040351927.1541821215; i3_ab=8833; bh=eyJwcHBkMDA2NzdkbDYiOiJtb3ZpZXMiLCJwcHBkMDA2NzZkbDYiOiJtb3ZpZXMifQ%3D%3D")
+					.ignoreHttpErrors(true).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
 			videoLinksElements = doc.select("div.item");
 			if(videoLinksElements != null)
 			{

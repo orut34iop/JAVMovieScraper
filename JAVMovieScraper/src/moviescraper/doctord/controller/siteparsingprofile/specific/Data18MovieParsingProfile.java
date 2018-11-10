@@ -285,7 +285,16 @@ public class Data18MovieParsingProfile extends SiteParsingProfile implements Spe
                     String currentGalleryURL = "http://www.data18.com/content/" + myID;
                     try {
 
-                            Document galleryDocument = Jsoup.connect(currentGalleryURL).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0").get();
+                            Document galleryDocument = Jsoup.connect(currentGalleryURL)
+                    				.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
+                    				.header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+                    				.header("Accept-Encoding", "gzip, deflate")
+                    				.header("Accept-Language", "zh-CN,zh;q=0.9")
+                    				.header("Upgrade-Insecure-Requests", "1")
+                    				.header("Connection", "keep-alive")
+                    				.header("Cookie", "rtt=xjmx6Q9Vt6cd7LiT05x3WdEBrtMrQ7MVeWjc148jYhO3%2BosfSwmuqxhlrkoknBAUvxWwAv5Iy8er2lpw3xTdElvtKtUsQKBXi73vOj6SweT3HseCRr9URNuFiljDBSPuzk59rVsZSHE8jhctw0pDB67kszWWPEKVNPtRRvHQjBAMbKRs18LVDwsN78PKB1HGHEOVgqJXy6eXhO6gLN8JbpeXdLk%3D; lg=zh; ab=a; ex=USD; gid=UoFfNDEto5dgH7%2BiACzCLBYq538L1KA3gnTf187N5w2KXUhs4ytvPv39SRvm23wvx%2Fk0f26ZosBy38PWrdZjW3DOQmE%3D; _ga=GA1.2.161111165.1541821215; _gid=GA1.2.2040351927.1541821215; i3_ab=8833; bh=eyJwcHBkMDA2NzdkbDYiOiJtb3ZpZXMiLCJwcHBkMDA2NzZkbDYiOiJtb3ZpZXMifQ%3D%3D")
+                    				.timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE)
+                    				.get();
                             if(galleryDocument!= null)
                             {                    
                                 Elements galleryElement = galleryDocument.select("div a[href*=/viewer/]");
@@ -327,7 +336,16 @@ public class Data18MovieParsingProfile extends SiteParsingProfile implements Spe
 			{
 				String currentViewerPageURL = "http://www.data18.com/viewer/" + contentID + "/" + String.format("%02d", viewerPageNumber);
 				try {
-					Document viewerDocument = Jsoup.connect(currentViewerPageURL).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0").get();
+					Document viewerDocument = Jsoup.connect(currentViewerPageURL)
+							.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
+							.header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+							.header("Accept-Encoding", "gzip, deflate")
+							.header("Accept-Language", "zh-CN,zh;q=0.9")
+							.header("Upgrade-Insecure-Requests", "1")
+							.header("Connection", "keep-alive")
+							.header("Cookie", "rtt=xjmx6Q9Vt6cd7LiT05x3WdEBrtMrQ7MVeWjc148jYhO3%2BosfSwmuqxhlrkoknBAUvxWwAv5Iy8er2lpw3xTdElvtKtUsQKBXi73vOj6SweT3HseCRr9URNuFiljDBSPuzk59rVsZSHE8jhctw0pDB67kszWWPEKVNPtRRvHQjBAMbKRs18LVDwsN78PKB1HGHEOVgqJXy6eXhO6gLN8JbpeXdLk%3D; lg=zh; ab=a; ex=USD; gid=UoFfNDEto5dgH7%2BiACzCLBYq538L1KA3gnTf187N5w2KXUhs4ytvPv39SRvm23wvx%2Fk0f26ZosBy38PWrdZjW3DOQmE%3D; _ga=GA1.2.161111165.1541821215; _gid=GA1.2.2040351927.1541821215; i3_ab=8833; bh=eyJwcHBkMDA2NzdkbDYiOiJtb3ZpZXMiLCJwcHBkMDA2NzZkbDYiOiJtb3ZpZXMifQ%3D%3D")
+							.timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE)
+							.get();
 					if(viewerDocument!= null)
 					{
 						Element imgElement = viewerDocument.select("div#post_view a[href*=/viewer/] img").first();
@@ -494,7 +512,15 @@ public class Data18MovieParsingProfile extends SiteParsingProfile implements Spe
 		if(useSiteSearch)
 		{
 			ArrayList<SearchResult> linksList = new ArrayList<>();
-			Document doc = Jsoup.connect(searchString).userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0").ignoreHttpErrors(true).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
+			Document doc = Jsoup.connect(searchString)
+					.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
+					.header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+					.header("Accept-Encoding", "gzip, deflate")
+					.header("Accept-Language", "zh-CN,zh;q=0.9")
+					.header("Upgrade-Insecure-Requests", "1")
+					.header("Connection", "keep-alive")
+					.header("Cookie", "rtt=xjmx6Q9Vt6cd7LiT05x3WdEBrtMrQ7MVeWjc148jYhO3%2BosfSwmuqxhlrkoknBAUvxWwAv5Iy8er2lpw3xTdElvtKtUsQKBXi73vOj6SweT3HseCRr9URNuFiljDBSPuzk59rVsZSHE8jhctw0pDB67kszWWPEKVNPtRRvHQjBAMbKRs18LVDwsN78PKB1HGHEOVgqJXy6eXhO6gLN8JbpeXdLk%3D; lg=zh; ab=a; ex=USD; gid=UoFfNDEto5dgH7%2BiACzCLBYq538L1KA3gnTf187N5w2KXUhs4ytvPv39SRvm23wvx%2Fk0f26ZosBy38PWrdZjW3DOQmE%3D; _ga=GA1.2.161111165.1541821215; _gid=GA1.2.2040351927.1541821215; i3_ab=8833; bh=eyJwcHBkMDA2NzdkbDYiOiJtb3ZpZXMiLCJwcHBkMDA2NzZkbDYiOiJtb3ZpZXMifQ%3D%3D")
+					.ignoreHttpErrors(true).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
 			Elements movieSearchResultElements = doc.select("div[style=float: left; padding: 6px; width: 130px;]");
 			if(movieSearchResultElements == null || movieSearchResultElements.size() == 0)
 			{
