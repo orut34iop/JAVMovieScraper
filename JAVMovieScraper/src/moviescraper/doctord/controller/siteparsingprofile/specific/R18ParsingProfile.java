@@ -426,8 +426,17 @@ public class R18ParsingProfile extends SiteParsingProfile implements SpecificPro
 			searchWordURLEncoded = codec.encode(searchWord);
 			String searchPattern = "http://www.r18.com/common/search/floor=movies/searchword=" + searchWordURLEncoded + "/";
 			System.out.println("Searching on R18 with this URL:" + searchPattern);
-			Document searchResultsPage = Jsoup.connect(searchPattern).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
-			Elements moviesFound = searchResultsPage.select(".cmn-list-product01 li");
+//			Document searchResultsPage = Jsoup.connect(searchPattern).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
+			
+			Document searchResultsPage = Jsoup.connect(searchPattern)
+					.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.67 Safari/537.36")
+					.header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+					.header("Accept-Encoding", "gzip, deflate")
+					.header("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7")
+					.header("Connection", "close").ignoreHttpErrors(true).timeout(60000).get();			
+			
+			System.out.println("whole  R18 html :" + searchResultsPage);			
+			Elements moviesFound = searchResultsPage.select(/*".cmn-list-product01 li"*/"li[class]");
 			if(moviesFound != null && moviesFound.size() > 0)
 			{
 				SearchResult [] foundResults = new SearchResult[moviesFound.size()];
