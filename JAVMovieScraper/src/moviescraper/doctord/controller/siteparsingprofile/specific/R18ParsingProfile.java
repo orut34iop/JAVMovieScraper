@@ -429,14 +429,17 @@ public class R18ParsingProfile extends SiteParsingProfile implements SpecificPro
 //			Document searchResultsPage = Jsoup.connect(searchPattern).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
 			
 			Document searchResultsPage = Jsoup.connect(searchPattern)
-					.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.67 Safari/537.36")
+					.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
 					.header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
 					.header("Accept-Encoding", "gzip, deflate")
-					.header("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7")
-					.header("Connection", "close").ignoreHttpErrors(true).timeout(60000).get();			
+					.header("Accept-Language", "zh-CN,zh;q=0.9")
+					.header("Upgrade-Insecure-Requests", "1")
+					.header("Connection", "keep-alive")
+					.header("Cookie", "rtt=xjmx6Q9Vt6cd7LiT05x3WdEBrtMrQ7MVeWjc148jYhO3%2BosfSwmuqxhlrkoknBAUvxWwAv5Iy8er2lpw3xTdElvtKtUsQKBXi73vOj6SweT3HseCRr9URNuFiljDBSPuzk59rVsZSHE8jhctw0pDB67kszWWPEKVNPtRRvHQjBAMbKRs18LVDwsN78PKB1HGHEOVgqJXy6eXhO6gLN8JbpeXdLk%3D; lg=zh; ab=a; ex=USD; gid=UoFfNDEto5dgH7%2BiACzCLBYq538L1KA3gnTf187N5w2KXUhs4ytvPv39SRvm23wvx%2Fk0f26ZosBy38PWrdZjW3DOQmE%3D; _ga=GA1.2.161111165.1541821215; _gid=GA1.2.2040351927.1541821215; i3_ab=8833; bh=eyJwcHBkMDA2NzdkbDYiOiJtb3ZpZXMiLCJwcHBkMDA2NzZkbDYiOiJtb3ZpZXMifQ%3D%3D")					
+					.ignoreHttpErrors(true).timeout(60000).get();			
 			
 			System.out.println("whole  R18 html :" + searchResultsPage);			
-			Elements moviesFound = searchResultsPage.select(/*".cmn-list-product01 li"*/"li[class]");
+			Elements moviesFound = searchResultsPage.select(/*".cmn-list-product01 li"*/"li[class=item-list]");
 			if(moviesFound != null && moviesFound.size() > 0)
 			{
 				SearchResult [] foundResults = new SearchResult[moviesFound.size()];
