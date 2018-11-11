@@ -913,6 +913,7 @@ public class Movie {
 			//for now just set the movie to the first thing found unless we found a link which had something close to the ID
 			SearchResult searchResultToUse = searchResults[searchResultNumberToUse];
 			Document searchMatch = SiteParsingProfile.downloadDocument(searchResultToUse);
+			System.out.println("R18 scapter new html :" + searchMatch);	
 			//Handle any captchas etc that prevent us from getting our result
 			if (searchMatch != null && SecurityPassthrough.class.isAssignableFrom(siteToParseFrom.getClass()))
 			{

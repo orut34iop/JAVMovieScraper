@@ -124,10 +124,29 @@ public class R18ParsingProfile extends SiteParsingProfile implements SpecificPro
 	
 	@Override
 	public ReleaseDate scrapeReleaseDate() {
-		Element releaseDateElement = document.select("div.product-details dl dt:contains(Release Date) ~ dd").first();
+//		Element releaseDateElement = document.select("div.product-details dl dt:contains(Release Date) ~ dd").first();
+		
+		Element releaseDateElement = document.select("dd[itemprop=dateCreated]").first();
+
+/*
+ *		Elements genreElements = document.select("a[itemprop=genre]");
+		if(genreElements != null)
+		{
+			for(Element currentGenre : genreElements)
+			{
+				String genreText = currentGenre.text(); 
+ * */		
+		
 		if(releaseDateElement != null && releaseDateElement.text().length() > 4)
 		{
 			String releaseDateText = releaseDateElement.text().trim();
+
+			if (releaseDateText.contains("/")) {
+				releaseDateText = releaseDateText.replace('/', '-');
+				ReleaseDate releaseDate = new ReleaseDate(releaseDateText);
+				return releaseDate;
+			}
+			
 			
 			//gah why is this site so inconsistent. September should be Sep., not "Sept.". 
 			//They randomly decide how many letters they want each month to take.
@@ -308,7 +327,8 @@ public class R18ParsingProfile extends SiteParsingProfile implements SpecificPro
 	@Override
 	public ArrayList<Genre> scrapeGenres() {
 		ArrayList<Genre> genreList = new ArrayList<>();
-		Elements genreElements = document.select("div.product-details dl dt:contains(Categories:) ~ dd a");
+	//	Elements genreElements = document.select("div.product-details dl dt:contains(Categories:) ~ dd a");
+		Elements genreElements = document.select("a[itemprop=genre]");
 		if(genreElements != null)
 		{
 			for(Element currentGenre : genreElements)
