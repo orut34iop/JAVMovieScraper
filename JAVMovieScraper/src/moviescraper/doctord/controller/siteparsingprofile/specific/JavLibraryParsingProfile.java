@@ -57,8 +57,7 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 	private static final SimpleDateFormat javLibraryReleaseDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 	
 	@Override
-	public List<ScraperGroupName> getScraperGroupNames()
-	{
+	public List<ScraperGroupName> getScraperGroupNames() {
 		if(groupNames == null)
 			groupNames = Arrays.asList(ScraperGroupName.JAV_CENSORED_SCRAPER_GROUP);
 		return groupNames;
@@ -85,8 +84,7 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 		return MoviescraperPreferences.getInstance().getScrapeInJapanese() ? "ja" : "en";
 	}
 	
-	public JavLibraryParsingProfile(Document document, String siteLanguageToScrape)
-	{
+	public JavLibraryParsingProfile(Document document, String siteLanguageToScrape) {
 		super(document);
 		this.siteLanguageToScrape = siteLanguageToScrape;
 	}
@@ -98,23 +96,20 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 	@Override
 	public Title scrapeTitle() {
 
-		Element titleElement = document
-				.select("h3.post-title.text a")
-				.first();
+		Element titleElement = document.select("h3.post-title.text a").first();
 		//remove the ID number off beginning of the title, if it exists (and it usually always does on JavLibrary)
-		if(titleElement != null)
-		{
+		if (titleElement != null) {
 			String titleElementText = titleElement.text().trim();
 			titleElementText = titleElementText.substring(StringUtils.indexOf(titleElementText," ")).trim();
 			//sometimes this still leaves "- " at the start of the title, so we'll want to get rid of that too
-			if(titleElementText.startsWith("- "))
-			{
+			if (titleElementText.startsWith("- ")) {
 				titleElementText = titleElementText.replaceFirst(Pattern.quote("- "), "");
 			}
 			return new Title(titleElementText);
 		}
 		//this shouldn't really ever happen...
-		else return new Title("");
+		else
+			return new Title("");
 	}
 
 	@Override
@@ -153,20 +148,16 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 	@Override
 	public Rating scrapeRating() {
 		//JavLibrary uses a decimal value out of 10 for its rating
-		Element ratingElement = document
-				.select("span.score")
-				.first();
-		if(ratingElement != null)
-		{
+		Element ratingElement = document.select("span.score").first();
+		if (ratingElement != null) {
 			String ratingText = ratingElement.text();
 			//Found a match, get rid of surrounding parenthesis and use this as the rating
-			if(ratingText.contains("("))
-			{
+			if (ratingText.contains("(")) {
 				ratingText = ratingText.substring(1,ratingText.length()-1).trim();
 			}
 			return new Rating(10,ratingText);
-		}
-		else return Rating.BLANK_RATING; //No rating found on the page
+		} else
+			return Rating.BLANK_RATING; //No rating found on the page
 	}
 
 	@Override
@@ -176,17 +167,14 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 	
 	@Override
 	public ReleaseDate scrapeReleaseDate() {
-		Element dateElement = document
-				.select("div#video_date tr td.header + td.text")
-				.first();
+		Element dateElement = document.select("div#video_date tr td.header + td.text").first();
 		String dateText = dateElement.text();
 		//The dateText is in format YYYY-MM-DD
-		if(dateText.length() > 0)
-		{
+		if (dateText.length() > 0) {
 			dateText = dateText.trim();
 			return new ReleaseDate(dateText, javLibraryReleaseDateFormat);
-		}
-		else return ReleaseDate.BLANK_RELEASEDATE;
+		} else
+			return ReleaseDate.BLANK_RELEASEDATE;
 	}
 
 	@Override
@@ -217,15 +205,12 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 
 	@Override
 	public Runtime scrapeRuntime() {
-		Element lengthElement = document
-				.select("div#video_length tr td.header + td span.text")
-				.first();
+		Element lengthElement = document.select("div#video_length tr td.header + td span.text").first();
 		String lengthText = lengthElement.text();
-		if(lengthText.length() > 0)
-		{
-			return new moviescraper.doctord.model.dataitem.Runtime(lengthText);
-		}
-		else return new moviescraper.doctord.model.dataitem.Runtime("");
+		if (lengthText.length() > 0) {
+			return new Runtime(lengthText);
+		} else
+			return new Runtime("");
 	}
 
 	@Override
@@ -239,13 +224,10 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 	}
 
 	private Thumb[] scrapePostersAndFanart(boolean doCrop) {
-		Element posterElement = document
-				.select("img#video_jacket_img")
-				.first();
+		Element posterElement = document.select("img#video_jacket_img").first();
 		Thumb[] posterThumbs = new Thumb[1];
-		if(posterElement != null)
-		{
-			String posterLink = posterElement.attr("src").trim();
+		if (posterElement != null) {
+			String posterLink = "https:" + posterElement.attr("src").trim();
 			try{
 				if (doCrop)
 					//posterThumbs[0] = new Thumb(posterLink, 52.7, 0, 0, 0);
@@ -253,14 +235,13 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 				else
 					posterThumbs[0] = new Thumb(posterLink);
 				return posterThumbs;
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return new Thumb[0];
 			}
-		}
-		else return new Thumb[0];
+		} else
+			return new Thumb[0];
 	}
 
 	@Override
@@ -270,24 +251,19 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 
 	@Override
 	public ID scrapeID() {
-		Element idElement = document
-				.select("div#video_id tr td.header + td.text")
-				.first();
+		Element idElement = document.select("div#video_id tr td.header + td.text").first();
 		String idText = idElement.text();
-		if(idText.length() > 0)
-		{
+		if (idText.length() > 0) {
 			return new ID(idText);
-		}
-		else return ID.BLANK_ID;
+		} else
+			return ID.BLANK_ID;
 	}
 
 	@Override
 	public ArrayList<Genre> scrapeGenres() {
-		Elements genreElements = document
-				.select(".genre");
+		Elements genreElements = document.select(".genre");
 		ArrayList<Genre> genreList = new ArrayList<>(genreElements.size());
-		for (Element genreElement : genreElements)
-		{
+		for (Element genreElement : genreElements) {
 			String currentGenreText = genreElement.text().trim();
 			//Sometimes javlibrary has junk genres like video sample. It's not really a genre, so get rid of it!
 			if(acceptGenreText(currentGenreText))
@@ -297,8 +273,7 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 	}
 	
 	private boolean acceptGenreText(String genreText){
-		switch(genreText)
-		{
+		switch (genreText) {
 		case "Video Sample":
 			return false;
 		case "Blu-ray":
@@ -314,16 +289,14 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 
 	@Override
 	public ArrayList<Actor> scrapeActors() {
-		Elements castElements = document
-				.select("span.cast");
+		Elements castElements = document.select("span.cast");
 		ArrayList<Actor> actorList = new ArrayList<>(castElements.size());
 		for (Element castElement : castElements) {
 			String actressName = castElement.select("span.star a").text().trim();
 			Elements aliasElements = castElement.select("span.alias");
 			String [] aliasNames = new String[aliasElements.size()];
 			int i = 0; //index of loop iteration
-			for(Element aliasElement : aliasElements)
-			{
+			for (Element aliasElement : aliasElements) {
 				String currentAlias = aliasElement.text().trim();
 				//we might need to reverse the alias name from lastname, firstname to firstname lastname, if we're scraping in english and
 				//we specify in options
@@ -336,8 +309,7 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 			
 			//JavLibrary has asian names in Lastname, first format. Reverse it, if we specify it with the option to do so
 			//but only do this if we're scraping in english
-			if(reverseAsianNameInEnglish && (siteLanguageToScrape == englishLanguageCode || scrapingLanguage == Language.ENGLISH) && actressName.contains(" "))
-			{
+			if (reverseAsianNameInEnglish && (siteLanguageToScrape == englishLanguageCode || scrapingLanguage == Language.ENGLISH) && actressName.contains(" ")) {
 				actressName = StringUtils.reverseDelimited(actressName, ' ');
 				
 			}
@@ -346,10 +318,8 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 			
 			if(aliasName.length() > 0)
 				actressName += " (" + aliasName + ")";*/
-			if(aliasNames.length > 0)
-			{
-				for(int j = 0; j < aliasNames.length; j++)
-				{
+			if (aliasNames.length > 0) {
+				for (int j = 0; j < aliasNames.length; j++) {
 					actressName = actressName + " (" + aliasNames[j] + ")";
 				}
 			}
@@ -360,11 +330,9 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 
 	@Override
 	public ArrayList<Director> scrapeDirectors() {
-		Elements directorElements = document
-				.select(".director a");
+		Elements directorElements = document.select(".director a");
 		ArrayList<Director> directorList = new ArrayList<>(directorElements.size());
-		for (Element currentDirectorElement : directorElements)
-		{
+		for (Element currentDirectorElement : directorElements) {
 			String currentDirectorName = currentDirectorElement.text().trim();
 			directorList.add(new Director(currentDirectorName,null));
 		}
@@ -373,14 +341,11 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 
 	@Override
 	public Studio scrapeStudio() {
-		Element studioElement = document
-				.select(".maker a")
-				.first();
-		if(studioElement != null)
-		{
+		Element studioElement = document.select(".maker a").first();
+		if (studioElement != null) {
 			return new Studio(studioElement.text().trim());
-		}
-		else return Studio.BLANK_STUDIO;
+		} else
+			return Studio.BLANK_STUDIO;
 	}
 
 	@Override
@@ -413,42 +378,32 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 		try{
 		Document doc = Jsoup.connect(searchString).userAgent("Mozilla").ignoreHttpErrors(true).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
 		//The search found the page directly
-		if(doc.baseUri().contains("/?v="))
-		{
+			if (doc.baseUri().contains("/?v=")) {
 			String linkTitle = doc.title().replaceAll(Pattern.quote(" - JAVLibrary"), "");
-			Element posterElement = doc
-					.select("img#video_jacket_img")
-					.first();
+				Element posterElement = doc.select("img#video_jacket_img").first();
 			//the page does not have the small version on it, but by replacing the last character of the string with an t, we will get the tiny preview
-			if(posterElement != null)
-			{
-				String posterURLSmall = posterElement.attr("src");
+				if (posterElement != null) {
+					String posterURLSmall = "https:" + posterElement.attr("src");
 				posterURLSmall = posterURLSmall.substring(0, posterURLSmall.lastIndexOf('l')) + "t.jpg";
 				linksList.add(new SearchResult(doc.baseUri(), linkTitle, new Thumb(posterURLSmall)));
-			}
-			else 
-			{
+				} else {
 				linksList.add(new SearchResult(doc.baseUri(), linkTitle));
 			}
 			//System.out.println("Added " + doc.baseUri());
 			
 			return linksList.toArray(new SearchResult[linksList.size()]);
-		}
-		else
-		{
+			} else {
 			//The search didn't find an exact match and took us to the search results page
 			//We're filtering out anything that does not exactly match the id from the search query
 			
 			String searchId = new URLCodec().decode(searchString.replaceAll(".*\\?keyword=(.*)$", "$1")).toUpperCase();
 			Elements videoLinksElements = doc.select("div.video:has(div.id:matchesOwn(^"+Pattern.quote(searchId)+"$))");
 			
-			for(Element videoLink : videoLinksElements)
-			{
+				for (Element videoLink : videoLinksElements) {
 				String currentLink = videoLink.select("a").attr("href");
 				String currentLinkLabel = videoLink.select("a").attr("title").trim();
-				String currentLinkImage = videoLink.select("img").attr("src");
-				if(currentLink.length() > 1)
-				{
+					String currentLinkImage = "https:" + videoLink.select("img").attr("src");
+					if (currentLink.length() > 1) {
 					String fullLink = websiteURLBegin + currentLink.substring(1);
 					linksList.add(new SearchResult(fullLink,currentLinkLabel,new Thumb(currentLinkImage)));
 					//System.out.println("Added " + fullLink);
