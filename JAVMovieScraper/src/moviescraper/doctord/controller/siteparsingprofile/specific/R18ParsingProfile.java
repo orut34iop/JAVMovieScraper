@@ -459,7 +459,104 @@ public class R18ParsingProfile extends SiteParsingProfile implements SpecificPro
 					.ignoreHttpErrors(true).timeout(60000).get();			
 			
 			System.out.println("whole  R18 html :" + searchResultsPage);			
-			Elements moviesFound = searchResultsPage.select(/*".cmn-list-product01 li"*/"li[class=item-list]");
+			
+/*
+ * 
+ <li class="item-list">
+	<a href="http://www.r18.com/videos/vod/movies/detail/-/id=1sdmu00152/?i3_ref=search&amp;i3_ord=1">
+		<p>
+					<img 
+							class='lazy' src="http://www.r18.com/assets/img/common/img-135x188.gif" data-original="http://pics.r18.com/digital/video/1sdmu00152/1sdmu00152ps.jpg" 
+						width="135" height="188">
+				</p>
+						<dl>
+			<dt>無辜的夫婦 x 真正 nakadashi &times; 連續射精遊戲&quot;男友不工作，多次給予魷魚讓？ &quot;後射擊在最後 60 分鐘五次 &#039;不證明任何男朋友&#039; 100 萬日元 ！ 2</dt>
+							<dd>~2.66&nbsp;USD&nbsp;-</dd>
+					</dl>
+	</a>
+
+<div class="cmn-btn-imgHover01">
+
+					 <div class="js-add-to-wishlist wishlist-inline" data-wishlist-id="1sdmu00152"></div>
+			
+		<p>
+		<a class="js-view-sample"
+							data-id="1sdmu00152"
+										data-video-low="http://awspv3001.r18.com/litevideo/freepv/1/1sd/1sdmu152/1sdmu152_sm_w.mp4"
+										data-video-med="http://awspv3001.r18.com/litevideo/freepv/1/1sd/1sdmu152/1sdmu152_dm_w.mp4"
+										data-video-high="http://awspv3001.r18.com/litevideo/freepv/1/1sd/1sdmu152/1sdmu152_dmb_w.mp4"
+												data-product-page-url="http://www.r18.com/videos/vod/movies/detail/-/id=1sdmu00152/?i3_ref=search&amp;i3_ord=1"
+			data-title="無辜的夫婦 x 真正 nakadashi &times; 連續射精遊戲&quot;男友不工作，多次給予魷魚讓？ &quot;後射擊在最後 60 分鐘五次 &#039;不證明任何男朋友&#039; 100 萬日元 ！ 2"
+			data-description=""
+							data-price="~2.66&nbsp;USD&nbsp;-"
+										data-poster="http://pics.r18.com/digital/video/1sdmu00152/1sdmu00152ps.jpg"
+									>		</a>
+	</p>
+	</div>
+</li>
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+<li class="item-list is-sale">
+	<a href="http://www.r18.com/videos/vod/movies/detail/-/id=1sdmu00526/?i3_ref=search&amp;i3_ord=1">
+		<p>
+					<img 
+							class='lazy' src="http://www.r18.com/assets/img/common/img-135x188.gif" data-original="http://pics.r18.com/digital/video/1sdmu00526/1sdmu00526ps.jpg" 
+						width="135" height="188">
+				</p>
+					<span class="saleRibbon ">
+				特價			</span>
+						<dl>
+			<dt><span>特價</span>第一次蜜月夫妻有限魔術鏡子子宮按摩達到高潮 20 放手 ！ 在遙遠的態度比丈夫 Moo 真正 nakadashi 毛 ！</dt>
+							<dd>~1.86&nbsp;USD&nbsp;-</dd>
+					</dl>
+	</a>
+
+<div class="cmn-btn-imgHover01">
+
+					 <div class="js-add-to-wishlist wishlist-inline" data-wishlist-id="1sdmu00526"></div>
+			
+		<p>
+		<a class="js-view-sample"
+							data-id="1sdmu00526"
+										data-video-low="http://awspv3001.r18.com/litevideo/freepv/1/1sd/1sdmu00526/1sdmu00526_sm_w.mp4"
+										data-video-med="http://awspv3001.r18.com/litevideo/freepv/1/1sd/1sdmu00526/1sdmu00526_dm_w.mp4"
+										data-video-high="http://awspv3001.r18.com/litevideo/freepv/1/1sd/1sdmu00526/1sdmu00526_dmb_w.mp4"
+												data-product-page-url="http://www.r18.com/videos/vod/movies/detail/-/id=1sdmu00526/?i3_ref=search&amp;i3_ord=1"
+			data-title="第一次蜜月夫妻有限魔術鏡子子宮按摩達到高潮 20 放手 ！ 在遙遠的態度比丈夫 Moo 真正 nakadashi 毛 ！"
+			data-description=""
+							data-price="~1.86&nbsp;USD&nbsp;-"
+										data-poster="http://pics.r18.com/digital/video/1sdmu00526/1sdmu00526ps.jpg"
+									>		</a>
+	</p>
+	</div>
+</li>
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * */			
+			
+			
+			Elements moviesFound = searchResultsPage.select(/*".cmn-list-product01 li"*/"li[class^=item-list]");
 			if(moviesFound != null && moviesFound.size() > 0)
 			{
 				SearchResult [] foundResults = new SearchResult[moviesFound.size()];
