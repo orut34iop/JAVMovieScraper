@@ -27,6 +27,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import moviescraper.doctord.controller.AbstractMovieScraper;
 import moviescraper.doctord.controller.GenericMovieScraper;
@@ -133,7 +135,7 @@ public abstract class SiteParsingProfile implements DataItemSource{
 	public SiteParsingProfile(Document document) {
 		this.document = document;
 		overrideURLDMM = null;
-		scrapingLanguage = Language.ENGLISH;
+		scrapingLanguage = Language.JAPANESE;
 		scrapingPreferences = MoviescraperPreferences.getInstance();
 		setScrapingLanguage(scrapingPreferences);
 		this.firstWordOfFileIsID = scrapingPreferences.getIsFirstWordOfFileID();
@@ -141,7 +143,7 @@ public abstract class SiteParsingProfile implements DataItemSource{
 	}
 	
 	public SiteParsingProfile(){
-		scrapingLanguage = Language.ENGLISH;
+		scrapingLanguage = Language.JAPANESE;
 		scrapingPreferences = MoviescraperPreferences.getInstance();
 		setScrapingLanguage(scrapingPreferences);
 		this.firstWordOfFileIsID = scrapingPreferences.getIsFirstWordOfFileID();
@@ -352,6 +354,9 @@ public abstract class SiteParsingProfile implements DataItemSource{
 	}
 
 	protected static boolean fileExistsAtURL(String URLName){
+		
+		return false;
+/*		
 	    try {
 	      HttpURLConnection.setFollowRedirects(false);
 	      // note : you may also need
@@ -372,6 +377,7 @@ public abstract class SiteParsingProfile implements DataItemSource{
 	       e.printStackTrace();
 	       return false;
 	    }
+*/	    
 	  }
 
 	public AbstractMovieScraper getMovieScraper() {
@@ -398,7 +404,7 @@ public abstract class SiteParsingProfile implements DataItemSource{
 		if(preferences.getScrapeInJapanese())
 			scrapingLanguage = Language.JAPANESE;
 		else
-			scrapingLanguage = Language.ENGLISH;
+			scrapingLanguage = Language.JAPANESE;
 	}
 	
 	/**
@@ -507,7 +513,15 @@ public abstract class SiteParsingProfile implements DataItemSource{
 
 	public static Document downloadDocumentFromURLString(String url) {
 		try {
-			return Jsoup.connect(url).userAgent("Mozilla").ignoreHttpErrors(true).timeout(CONNECTION_TIMEOUT_VALUE).get();
+			return Jsoup.connect(url)
+					.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
+					.header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+					.header("Accept-Encoding", "gzip, deflate")
+					.header("Accept-Language", "zh-CN,zh;q=0.9")
+					.header("Upgrade-Insecure-Requests", "1")
+					.header("Connection", "keep-alive")
+					.header("Cookie", "rtt=xjmx6Q9Vt6cd7LiT05x3WdEBrtMrQ7MVeWjc148jYhO3%2BosfSwmuqxhlrkoknBAUvxWwAv5Iy8er2lpw3xTdElvtKtUsQKBXi73vOj6SweT3HseCRr9URNuFiljDBSPuzk59rVsZSHE8jhctw0pDB67kszWWPEKVNPtRRvHQjBAMbKRs18LVDwsN78PKB1HGHEOVgqJXy6eXhO6gLN8JbpeXdLk%3D; lg=zh; ab=a; ex=USD; gid=UoFfNDEto5dgH7%2BiACzCLBYq538L1KA3gnTf187N5w2KXUhs4ytvPv39SRvm23wvx%2Fk0f26ZosBy38PWrdZjW3DOQmE%3D; _ga=GA1.2.161111165.1541821215; _gid=GA1.2.2040351927.1541821215; i3_ab=8833; bh=eyJwcHBkMDA2NzdkbDYiOiJtb3ZpZXMiLCJwcHBkMDA2NzZkbDYiOiJtb3ZpZXMifQ%3D%3D")
+					.ignoreHttpErrors(true).timeout(CONNECTION_TIMEOUT_VALUE).get();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -520,7 +534,20 @@ public abstract class SiteParsingProfile implements DataItemSource{
 		try {
 			if(searchResult.isJSONSearchResult())
 				return SiteParsingProfileJSON.getDocument(searchResult.getUrlPath());
-			else return Jsoup.connect(searchResult.getUrlPath()).userAgent("Mozilla").ignoreHttpErrors(true).timeout(CONNECTION_TIMEOUT_VALUE).get();
+			else { 
+			
+		        System.setProperty("webdriver.chrome.driver","C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
+		        WebDriver driver = new ChromeDriver();
+		        driver.get(searchResult.getUrlPath());
+	
+		        String html = driver.getPageSource();
+		        driver.quit();
+
+		        return  Jsoup.parse(html);
+	
+
+
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

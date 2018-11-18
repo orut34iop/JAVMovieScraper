@@ -19,6 +19,12 @@ public class ImageCache {
 	{
 		Map<URL, Image> cacheToUse = isImageModified ? modifiedImageCache : cache;
 		
+
+		Image blankImage = createBlankImage();
+		cacheToUse.put(url, blankImage);
+		return blankImage;
+
+/*		
 		//Cache already contains the item, so just return it
 		if(cacheToUse.containsKey(url))
 		{
@@ -59,6 +65,7 @@ public class ImageCache {
 				return blankImage;
 			}
 		}
+*/
 	}
 	
 	public static void putImageInCache(URL url, Image image, boolean isImageModified)

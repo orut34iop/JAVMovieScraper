@@ -118,7 +118,7 @@ public class Movie {
 	public Movie(SiteParsingProfile siteToScrapeFrom) {
 		title = siteToScrapeFrom.scrapeTitle();
 		
-		
+		id = siteToScrapeFrom.scrapeID();
 		originalTitle = siteToScrapeFrom.scrapeOriginalTitle();
 		sortTitle = siteToScrapeFrom.scrapeSortTitle();
 		set = siteToScrapeFrom.scrapeSet();
@@ -133,16 +133,20 @@ public class Movie {
 		studio = siteToScrapeFrom.scrapeStudio();
 		releaseDate = siteToScrapeFrom.scrapeReleaseDate();
 		runtime = siteToScrapeFrom.scrapeRuntime();
-		posters = siteToScrapeFrom.scrapePosters();
-		fanart = siteToScrapeFrom.scrapeFanart();
-		extraFanart = siteToScrapeFrom.scrapeExtraFanart();
+
 		mpaa = siteToScrapeFrom.scrapeMPAA();
-		id = siteToScrapeFrom.scrapeID();
+
 		actors = siteToScrapeFrom.scrapeActors();
 		genres = siteToScrapeFrom.scrapeGenres();
 		tags = siteToScrapeFrom.scrapeTags();
 		directors = siteToScrapeFrom.scrapeDirectors();
 		
+		posters = new Thumb[0];
+		fanart =  new Thumb[0];
+		extraFanart =  new Thumb[0];		
+		//posters = siteToScrapeFrom.scrapePosters();
+		//fanart = siteToScrapeFrom.scrapeFanart();
+		//extraFanart = siteToScrapeFrom.scrapeExtraFanart();		
 		setAllDataItemSources(siteToScrapeFrom);
 		
 

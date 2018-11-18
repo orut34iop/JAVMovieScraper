@@ -8,12 +8,31 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.awt.image.BufferedImage;
 
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import moviescraper.doctord.model.dataitem.Thumb;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.By;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 /**
  * Wrapper class around standard methods to download images from urls or write a url to a file 
  * so that set up a custom connection that allows us to set a user agent, etc.
@@ -33,7 +52,8 @@ public class FileDownloaderUtilities {
 	
 	public static Image getImageFromUrl(URL url) throws IOException
 	{
-		return getImageFromUrl(url, null);
+		return null;
+		//return getImageFromUrl(url, null);
 	}
 	
 	public static Image getImageFromUrl(URL url, URL viewerURL) throws IOException
@@ -51,6 +71,9 @@ public class FileDownloaderUtilities {
 	
 	public static Image getImageFromThumb(Thumb thumb)
 	{
+
+		return null;
+/*		
 		if (thumb != null)
 		{
 			try {
@@ -63,6 +86,7 @@ public class FileDownloaderUtilities {
 			}
 		}
 		return null;
+		*/
 	}
 	
 	public static void writeURLToFile(URL url, File file) throws IOException

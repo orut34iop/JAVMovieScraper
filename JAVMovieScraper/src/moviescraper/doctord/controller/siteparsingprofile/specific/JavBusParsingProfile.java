@@ -41,6 +41,8 @@ import moviescraper.doctord.model.dataitem.Top250;
 import moviescraper.doctord.model.dataitem.Votes;
 import moviescraper.doctord.model.dataitem.Year;
 
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 public class JavBusParsingProfile extends SiteParsingProfile implements SpecificProfile {
 	
 	public static final String urlLanguageEnglish = "en";
@@ -68,12 +70,17 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 				urlOfCurrentPage = urlOfCurrentPage.replaceFirst(Pattern.quote("http://www.javbus.com/en/"), "http://www.javbus.com/ja/");
 				if(urlOfCurrentPage.length() > 1)
 				{
-						try {
-							japaneseDocument = Jsoup.connect(urlOfCurrentPage).userAgent("Mozilla").ignoreHttpErrors(true).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
-						} catch (IOException e) {
+
+
+			        System.setProperty("webdriver.chrome.driver","C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
+			        WebDriver driver = new ChromeDriver();
+			        driver.get(urlOfCurrentPage);
+
+			        String html = driver.getPageSource();
+			        document = Jsoup.parse(html);
 							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+			        driver.quit();
+
 				}
 			}
 			else if(document != null)
@@ -188,7 +195,7 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 
 	@Override
 	public Runtime scrapeRuntime() {
-		String lengthWord = (scrapingLanguage == Language.ENGLISH) ? "Length:" : "�?�録時間:";
+		String lengthWord = (scrapingLanguage == Language.ENGLISH) ? "Length:" : "収録時間:";
 		Element lengthElement = document.select("p:contains(" + lengthWord + ")").first();
 		if(lengthElement != null && lengthElement.ownText().trim().length() >= 0)
 		{
@@ -257,7 +264,9 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 
 	@Override
 	public ID scrapeID() {
-		Element idElement = document.select("span.movie-code, span.header:containsOwn(ID:) + span").first();
+		//Element idElement = document.select("span.movie-code, span.header:containsOwn(ID:) + span").first();
+		String jav_id = (scrapingLanguage == Language.ENGLISH) ? "ID:" : "品番:";
+		Element idElement = document.select("span[style=color:#CC0000;]").first();
 		if(idElement != null)
 			return new ID(idElement.text());
 		else return ID.BLANK_ID;
@@ -348,7 +357,7 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 		URLCodec codec = new URLCodec();
 		try {
 			String fileNameURLEncoded = codec.encode(fileNameNoExtension);
-			String searchTerm = "http://www.javbus.com/" + getUrlLanguageToUse() + "/search/" + fileNameURLEncoded;
+			String searchTerm = "https://www.javbus.com/" + getUrlLanguageToUse() + "/search/" + fileNameURLEncoded;
 			return searchTerm;
 					
 		} catch (Exception e) {
@@ -361,7 +370,8 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 	private String getUrlLanguageToUse()
 	{
 		String urlLanguageToUse = (scrapingLanguage == Language.ENGLISH) ? urlLanguageEnglish : urlLanguageJapanese;
-		return urlLanguageToUse;
+		//return urlLanguageToUse;
+		return urlLanguageJapanese;
 	}
 
 	@Override
@@ -369,14 +379,24 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 			throws IOException {
 		ArrayList<SearchResult> linksList = new ArrayList<>();
 		try{
-			Document doc = Jsoup.connect(searchString).userAgent("Mozilla").ignoreHttpErrors(true).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
+	        System.setProperty("webdriver.chrome.driver","C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
+	        WebDriver driver = new ChromeDriver();
+	        driver.get(searchString);
+	        System.out.printf("dowload html done");	
+	        String html = driver.getPageSource();
+	        Document doc = Jsoup.parse(html);
+
 			Elements videoLinksElements = doc.select("div.item");
 			if(videoLinksElements == null || videoLinksElements.size() == 0)
 			{
 				searchString = searchString.replace("/search/", "/uncensored/search/");
 				isCensoredSearch = false;
+		        driver.get(searchString);
+		        html = driver.getPageSource();
+		        doc = Jsoup.parse(html);
 			}
-			doc = Jsoup.connect(searchString).userAgent("Mozilla").ignoreHttpErrors(true).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
+
+	        driver.quit();
 			videoLinksElements = doc.select("div.item");
 			if(videoLinksElements != null)
 			{
