@@ -43,6 +43,9 @@ import moviescraper.doctord.model.dataitem.Votes;
 import moviescraper.doctord.model.dataitem.Year;
 import moviescraper.doctord.model.preferences.MoviescraperPreferences;
 
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
 public class JavLibraryParsingProfile extends SiteParsingProfile implements SpecificProfile {
 
 	private String siteLanguageToScrape;
@@ -53,6 +56,15 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 	public static final String chineseLanguageCode = "cn";
 	private static final boolean reverseAsianNameInEnglish = true;
 	private String overrideURLJavLibrary;
+
+	public static final String JAVLIBRARY_COOKIE = "over18=18; __cfduid=d7d47fc300cf3d7faaff77e969fb73fe81541247375; timezone=-480; __utma=45030847.354495725.1541247379.1541247379.1541247379.1; __utmc=45030847; __utmz=45030847.1541247379.1.1.utmcsr=javlibrary.com|utmccn=(referral)|utmcmd=referral|utmcct=/; __qca=P0-1825026100-1541247379770; sc_is_visitor_unique=rx8499656.1541247381.3DD6B9422FBF4FC7927A77E003286527.1.1.1.1.1.1.1.1.1; __utma=45030847.354495725.1541247379.1541247379.1541247379.1; __utmc=45030847; __utmz=45030847.1541247379.1.1.utmcsr=javlibrary.com|utmccn=(referral)|utmcmd=referral|utmcct=/; PHPSESSID=6pcrn4ome8k9e4dmhpft6rago2; userid=ncng4ddac; session=sSfjnUyYETzxzys8DXuwxWHCL4S7FeSytfg4v51dGfh%2FvLlGFw%2BqT0JfanP7WLY8ut7SfNkmxxBerYVduNsI4Q%3D%3D+%3B+a01f73c63242314c80ecff7f2d0f245d8859a2c6+%3B+-65536; confirmobj=10099030; cf_clearance=5196777244dea8b0d106aa63fffba9ec59c5473d-1542442781-3600-150; __atuvc=3%7C44%2C4%7C45%2C21%7C46; __atuvs=5befc76605b3a7ee014";
+	public static final String JAVLIBRARY_UA = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.67 Safari/537.36";
+	public static final String JAVLIBRARY_ACCEPT = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8";
+	public static final String JAVLIBRARY_ACCEPTENCODING = "gzip, deflate";
+	public static final String JAVLIBRARY_ACCEPTLANG = "zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7";	
+	public static final String JAVLIBRARY_Cache_Control = "max-age=0";
+
+
 	
 	private static final SimpleDateFormat javLibraryReleaseDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 	
@@ -82,7 +94,8 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 	}
 	
 	private String determineLanguageToUse() {
-		return MoviescraperPreferences.getInstance().getScrapeInJapanese() ? "ja" : "en";
+		//return MoviescraperPreferences.getInstance().getScrapeInJapanese() ? "ja" : "en";
+		return "ja";
 	}
 	
 	public JavLibraryParsingProfile(Document document, String siteLanguageToScrape)
@@ -122,17 +135,20 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 
 		if (siteLanguageToScrape.equals(japaneseLanguageCode))
 			return new OriginalTitle(scrapeTitle().getTitle());
+
+		
 		
 		try {
 			String japaneseUrl = document.location().replace("javlibrary.com/" + siteLanguageToScrape + "/", "javlibrary.com/" + japaneseLanguageCode + "/");			
 			Document japaneseDoc = Jsoup.connect(japaneseUrl)
-					.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
-					.header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-					.header("Accept-Encoding", "gzip, deflate")
-					.header("Accept-Language", "zh-CN,zh;q=0.9")
+					.header("User-Agent", JAVLIBRARY_UA)
+					.header("Accept", JAVLIBRARY_ACCEPT)
+					.header("Accept-Encoding", JAVLIBRARY_ACCEPTENCODING)
+					.header("Accept-Language", JAVLIBRARY_ACCEPTLANG)
 					.header("Upgrade-Insecure-Requests", "1")
 					.header("Connection", "keep-alive")
-					.header("Cookie", "rtt=xjmx6Q9Vt6cd7LiT05x3WdEBrtMrQ7MVeWjc148jYhO3%2BosfSwmuqxhlrkoknBAUvxWwAv5Iy8er2lpw3xTdElvtKtUsQKBXi73vOj6SweT3HseCRr9URNuFiljDBSPuzk59rVsZSHE8jhctw0pDB67kszWWPEKVNPtRRvHQjBAMbKRs18LVDwsN78PKB1HGHEOVgqJXy6eXhO6gLN8JbpeXdLk%3D; lg=zh; ab=a; ex=USD; gid=UoFfNDEto5dgH7%2BiACzCLBYq538L1KA3gnTf187N5w2KXUhs4ytvPv39SRvm23wvx%2Fk0f26ZosBy38PWrdZjW3DOQmE%3D; _ga=GA1.2.161111165.1541821215; _gid=GA1.2.2040351927.1541821215; i3_ab=8833; bh=eyJwcHBkMDA2NzdkbDYiOiJtb3ZpZXMiLCJwcHBkMDA2NzZkbDYiOiJtb3ZpZXMifQ%3D%3D")
+				//	.header("Cache-Control:",JAVLIBRARY_Cache_Control)
+					.header("Cookie",JAVLIBRARY_COOKIE)
 					.timeout(CONNECTION_TIMEOUT_VALUE).get();
 			JavLibraryParsingProfile profile = new JavLibraryParsingProfile(japaneseDoc, japaneseLanguageCode);
 			return profile.scrapeOriginalTitle();
@@ -144,6 +160,8 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 		return OriginalTitle.BLANK_ORIGINALTITLE;
 	}
 
+	
+	
 	@Override
 	public SortTitle scrapeSortTitle() {
 		// we don't need any special sort title - that's usually something the
@@ -422,14 +440,15 @@ public class JavLibraryParsingProfile extends SiteParsingProfile implements Spec
 	//	Document doc = Jsoup.connect(searchString).header("Accept-Encoding", "gzip, deflate").userAgent(SiteParsingProfile.USERAGENT/*"Mozilla"*/).ignoreHttpErrors(true).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
 			
 		Document doc = Jsoup.connect(searchString)
-				.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
-				.header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-				.header("Accept-Encoding", "gzip, deflate")
-				.header("Accept-Language", "zh-CN,zh;q=0.9")
+				.header("User-Agent", JAVLIBRARY_UA)
+				.header("Accept", JAVLIBRARY_ACCEPT)
+				.header("Accept-Encoding", JAVLIBRARY_ACCEPTENCODING)
+				.header("Accept-Language", JAVLIBRARY_ACCEPTLANG)
 				.header("Upgrade-Insecure-Requests", "1")
 				.header("Connection", "keep-alive")
-				.header("Cookie", "rtt=xjmx6Q9Vt6cd7LiT05x3WdEBrtMrQ7MVeWjc148jYhO3%2BosfSwmuqxhlrkoknBAUvxWwAv5Iy8er2lpw3xTdElvtKtUsQKBXi73vOj6SweT3HseCRr9URNuFiljDBSPuzk59rVsZSHE8jhctw0pDB67kszWWPEKVNPtRRvHQjBAMbKRs18LVDwsN78PKB1HGHEOVgqJXy6eXhO6gLN8JbpeXdLk%3D; lg=zh; ab=a; ex=USD; gid=UoFfNDEto5dgH7%2BiACzCLBYq538L1KA3gnTf187N5w2KXUhs4ytvPv39SRvm23wvx%2Fk0f26ZosBy38PWrdZjW3DOQmE%3D; _ga=GA1.2.161111165.1541821215; _gid=GA1.2.2040351927.1541821215; i3_ab=8833; bh=eyJwcHBkMDA2NzdkbDYiOiJtb3ZpZXMiLCJwcHBkMDA2NzZkbDYiOiJtb3ZpZXMifQ%3D%3D")
-				.ignoreHttpErrors(true).timeout(60000).get();	
+			//	.header("Cache-Control:",JAVLIBRARY_Cache_Control)
+				.header("Cookie",JAVLIBRARY_COOKIE)
+				.ignoreHttpErrors(true).timeout(CONNECTION_TIMEOUT_VALUE).get();	
 
 			
 		//The search found the page directly

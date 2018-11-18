@@ -41,6 +41,9 @@ import moviescraper.doctord.model.dataitem.Top250;
 import moviescraper.doctord.model.dataitem.Votes;
 import moviescraper.doctord.model.dataitem.Year;
 
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
 public class JavBusParsingProfile extends SiteParsingProfile implements SpecificProfile {
 	
 	public static final String urlLanguageEnglish = "en";
@@ -68,20 +71,19 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 				urlOfCurrentPage = urlOfCurrentPage.replaceFirst(Pattern.quote("http://www.javbus.com/en/"), "http://www.javbus.com/ja/");
 				if(urlOfCurrentPage.length() > 1)
 				{
-						try {
-							japaneseDocument = Jsoup.connect(urlOfCurrentPage)
-									.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
-									.header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-									.header("Accept-Encoding", "gzip, deflate")
-									.header("Accept-Language", "zh-CN,zh;q=0.9")
-									.header("Upgrade-Insecure-Requests", "1")
-									.header("Connection", "keep-alive")
-									.header("Cookie", "rtt=xjmx6Q9Vt6cd7LiT05x3WdEBrtMrQ7MVeWjc148jYhO3%2BosfSwmuqxhlrkoknBAUvxWwAv5Iy8er2lpw3xTdElvtKtUsQKBXi73vOj6SweT3HseCRr9URNuFiljDBSPuzk59rVsZSHE8jhctw0pDB67kszWWPEKVNPtRRvHQjBAMbKRs18LVDwsN78PKB1HGHEOVgqJXy6eXhO6gLN8JbpeXdLk%3D; lg=zh; ab=a; ex=USD; gid=UoFfNDEto5dgH7%2BiACzCLBYq538L1KA3gnTf187N5w2KXUhs4ytvPv39SRvm23wvx%2Fk0f26ZosBy38PWrdZjW3DOQmE%3D; _ga=GA1.2.161111165.1541821215; _gid=GA1.2.2040351927.1541821215; i3_ab=8833; bh=eyJwcHBkMDA2NzdkbDYiOiJtb3ZpZXMiLCJwcHBkMDA2NzZkbDYiOiJtb3ZpZXMifQ%3D%3D")
-									.ignoreHttpErrors(true).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+
+
+			        System.setProperty("webdriver.chrome.driver","C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
+			        WebDriver driver = new ChromeDriver();
+			        driver.get(urlOfCurrentPage);
+
+			        String html = driver.getPageSource();
+			    //    System.out.printf(html);
+			        document = Jsoup.parse(html);
+
+			        driver.quit();
+							
+
 				}
 			}
 			else if(document != null)
@@ -161,6 +163,7 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 	public ReleaseDate scrapeReleaseDate() {
 		String releaseDateWord = (scrapingLanguage == Language.ENGLISH) ? "Release Date:" : "発売日:";
 		Element releaseDateElement = document.select("p:contains(" + releaseDateWord + ")").first();
+
 		if(releaseDateElement != null && releaseDateElement.ownText().trim().length() > 4)
 		{
 			String releaseDateText = releaseDateElement.ownText().trim();
@@ -196,7 +199,7 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 
 	@Override
 	public Runtime scrapeRuntime() {
-		String lengthWord = (scrapingLanguage == Language.ENGLISH) ? "Length:" : "�?�録時間:";
+		String lengthWord = (scrapingLanguage == Language.ENGLISH) ? "Length:" : "収録時間:";
 		Element lengthElement = document.select("p:contains(" + lengthWord + ")").first();
 		if(lengthElement != null && lengthElement.ownText().trim().length() >= 0)
 		{
@@ -265,7 +268,11 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 
 	@Override
 	public ID scrapeID() {
-		Element idElement = document.select("span.movie-code, span.header:containsOwn(ID:) + span").first();
+		//Element idElement = document.select("span.movie-code, span.header:containsOwn(ID:) + span").first();
+		String jav_id = (scrapingLanguage == Language.ENGLISH) ? "ID:" : "品番:";
+		
+		Element idElement = document.select("span[style=color:#CC0000;]").first();
+
 		if(idElement != null)
 			return new ID(idElement.text());
 		else return ID.BLANK_ID;
@@ -273,6 +280,17 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 
 	@Override
 	public ArrayList<Genre> scrapeGenres() {
+		
+/**
+ * 
+ *          <p>         <span class="genre"><a href="https://www.javbus.com/ja/genre/f">単体作品</a></span>
+                        <span class="genre"><a href="https://www.javbus.com/ja/genre/u">ごっくん</a></span>
+                        <span class="genre"><a href="https://www.javbus.com/ja/genre/1o">フェラ</a></span>
+                        <span class="genre"><a href="https://www.javbus.com/ja/genre/1y">その他フェチ</a></span>
+            </p>   
+ * 
+ * 
+ * **/		
 		ArrayList<Genre> genreList = new ArrayList<>();
 		Elements genreElements = document.select("span.genre a[href*=/genre/");
 		if(genreElements != null)
@@ -298,6 +316,19 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 	public ArrayList<Actor> scrapeActors() {
 		ArrayList<Actor> actorList = new ArrayList<>();
 		Elements actorElements = document.select("div.star-box li a img");
+		
+/*
+ *                  <div id="star_1yy" class="star-box star-box-common star-box-up idol-box">
+                      <li>
+                          <a href="https://www.javbus.com/ja/star/1yy"><img src="https://pics.javbus.com/actress/1yy_a.jpg" title="星優乃"></a>
+                          <div class="star-name"><a href="https://www.javbus.com/ja/star/1yy" title="星優乃">星優乃</a></div>
+                      </li>
+                    </div>
+ * 
+ * 		
+ */
+		
+		
 		if(actorElements != null)
 		{
 			for(Element currentActor: actorElements)
@@ -356,7 +387,7 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 		URLCodec codec = new URLCodec();
 		try {
 			String fileNameURLEncoded = codec.encode(fileNameNoExtension);
-			String searchTerm = "http://www.javbus.com/" + getUrlLanguageToUse() + "/search/" + fileNameURLEncoded;
+			String searchTerm = "https://www.javbus.com/" + getUrlLanguageToUse() + "/search/" + fileNameURLEncoded;
 			return searchTerm;
 					
 		} catch (Exception e) {
@@ -369,7 +400,8 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 	private String getUrlLanguageToUse()
 	{
 		String urlLanguageToUse = (scrapingLanguage == Language.ENGLISH) ? urlLanguageEnglish : urlLanguageJapanese;
-		return urlLanguageToUse;
+		//return urlLanguageToUse;
+		return urlLanguageJapanese;
 	}
 
 	@Override
@@ -377,30 +409,33 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 			throws IOException {
 		ArrayList<SearchResult> linksList = new ArrayList<>();
 		try{
-			Document doc = Jsoup.connect(searchString)
-					.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
-					.header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-					.header("Accept-Encoding", "gzip, deflate")
-					.header("Accept-Language", "zh-CN,zh;q=0.9")
-					.header("Upgrade-Insecure-Requests", "1")
-					.header("Connection", "keep-alive")
-					.header("Cookie", "rtt=xjmx6Q9Vt6cd7LiT05x3WdEBrtMrQ7MVeWjc148jYhO3%2BosfSwmuqxhlrkoknBAUvxWwAv5Iy8er2lpw3xTdElvtKtUsQKBXi73vOj6SweT3HseCRr9URNuFiljDBSPuzk59rVsZSHE8jhctw0pDB67kszWWPEKVNPtRRvHQjBAMbKRs18LVDwsN78PKB1HGHEOVgqJXy6eXhO6gLN8JbpeXdLk%3D; lg=zh; ab=a; ex=USD; gid=UoFfNDEto5dgH7%2BiACzCLBYq538L1KA3gnTf187N5w2KXUhs4ytvPv39SRvm23wvx%2Fk0f26ZosBy38PWrdZjW3DOQmE%3D; _ga=GA1.2.161111165.1541821215; _gid=GA1.2.2040351927.1541821215; i3_ab=8833; bh=eyJwcHBkMDA2NzdkbDYiOiJtb3ZpZXMiLCJwcHBkMDA2NzZkbDYiOiJtb3ZpZXMifQ%3D%3D")
-					.ignoreHttpErrors(true).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
+			
+	        System.setProperty("webdriver.chrome.driver","C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
+	        WebDriver driver = new ChromeDriver();
+	        driver.get(searchString);
+	        System.out.printf("dowload html done");	
+	        String html = driver.getPageSource();
+	      //  System.out.printf(html);
+	        Document doc = Jsoup.parse(html);
+
+			
 			Elements videoLinksElements = doc.select("div.item");
 			if(videoLinksElements == null || videoLinksElements.size() == 0)
 			{
 				searchString = searchString.replace("/search/", "/uncensored/search/");
 				isCensoredSearch = false;
+				
+		        driver.get(searchString);
+
+		        html = driver.getPageSource();
+		        //System.out.printf(html);
+		        doc = Jsoup.parse(html);
 			}
-			doc = Jsoup.connect(searchString)
-					.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
-					.header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-					.header("Accept-Encoding", "gzip, deflate")
-					.header("Accept-Language", "zh-CN,zh;q=0.9")
-					.header("Upgrade-Insecure-Requests", "1")
-					.header("Connection", "keep-alive")
-					.header("Cookie", "rtt=xjmx6Q9Vt6cd7LiT05x3WdEBrtMrQ7MVeWjc148jYhO3%2BosfSwmuqxhlrkoknBAUvxWwAv5Iy8er2lpw3xTdElvtKtUsQKBXi73vOj6SweT3HseCRr9URNuFiljDBSPuzk59rVsZSHE8jhctw0pDB67kszWWPEKVNPtRRvHQjBAMbKRs18LVDwsN78PKB1HGHEOVgqJXy6eXhO6gLN8JbpeXdLk%3D; lg=zh; ab=a; ex=USD; gid=UoFfNDEto5dgH7%2BiACzCLBYq538L1KA3gnTf187N5w2KXUhs4ytvPv39SRvm23wvx%2Fk0f26ZosBy38PWrdZjW3DOQmE%3D; _ga=GA1.2.161111165.1541821215; _gid=GA1.2.2040351927.1541821215; i3_ab=8833; bh=eyJwcHBkMDA2NzdkbDYiOiJtb3ZpZXMiLCJwcHBkMDA2NzZkbDYiOiJtb3ZpZXMifQ%3D%3D")
-					.ignoreHttpErrors(true).timeout(SiteParsingProfile.CONNECTION_TIMEOUT_VALUE).get();
+
+
+
+	        driver.quit();
+					
 			videoLinksElements = doc.select("div.item");
 			if(videoLinksElements != null)
 			{

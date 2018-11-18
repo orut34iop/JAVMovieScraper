@@ -6,6 +6,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 public abstract class SiteParsingProfileJSON extends SiteParsingProfile {
 
@@ -27,7 +32,17 @@ public abstract class SiteParsingProfileJSON extends SiteParsingProfile {
 	
 	public static Document getDocument(String url) throws IOException
 	{
-		return Jsoup.connect(url).ignoreContentType(true).get();
+		
+        System.setProperty("webdriver.chrome.driver","C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
+        WebDriver driver = new ChromeDriver();
+        driver.get(url);
+
+        String html = driver.getPageSource();
+        
+        driver.quit();
+
+        return  Jsoup.parse(html);
+
 	}
 	
 	
