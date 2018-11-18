@@ -488,16 +488,18 @@ public class Movie {
 		xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>"
 				+ "\n" + xml;
 		//System.out.println("Xml I am writing to file: \n" + xml);
-		
+
+		//only save pic files
+/*
 		if(nfoFile != null && xml.length() > 0)
 			nfoFile.delete();
 		FileUtils.writeStringToFile(nfoFile, xml,
 				org.apache.commons.lang3.CharEncoding.UTF_8);
-		
+*/		
 		Thumb posterToSaveToDisk = null;
 		if(posters != null && posters.length > 0)
 			posterToSaveToDisk = posters[0];
-		
+
 
 		
 		
