@@ -32,9 +32,10 @@ public abstract class SiteParsingProfileJSON extends SiteParsingProfile {
 	public static Document getDocument(String url) throws IOException
 	{
         System.setProperty("webdriver.chrome.driver","C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
+		System.out.printf("getDocument dowload html start");
         WebDriver driver = new ChromeDriver();
         driver.get(url);
-
+		System.out.printf("getDocument dowload html done");
         String html = driver.getPageSource();
         driver.quit();
         return  Jsoup.parse(html);

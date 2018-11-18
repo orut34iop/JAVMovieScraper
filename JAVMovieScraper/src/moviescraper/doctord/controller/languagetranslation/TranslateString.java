@@ -95,8 +95,10 @@ public class TranslateString {
 
 				String translationServicePostURL = translateBaseURL + URLEncoder.encode(japaneseString, encodingType) + postURLString;
 		        System.setProperty("webdriver.chrome.driver","C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
+				System.out.printf("translateStringJapaneseToEnglish dowload html start");
 		        WebDriver driver = new ChromeDriver();
 		        driver.get(translationServicePostURL);
+				System.out.printf("translateStringJapaneseToEnglish dowload html done");
 		        String html = driver.getPageSource();
 		        Document doc = Jsoup.parse(html);
 		        driver.quit();

@@ -537,9 +537,10 @@ public abstract class SiteParsingProfile implements DataItemSource{
 			else { 
 			
 		        System.setProperty("webdriver.chrome.driver","C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
+				System.out.printf("downloadDocument dowload html start");	
 		        WebDriver driver = new ChromeDriver();
 		        driver.get(searchResult.getUrlPath());
-	
+				System.out.printf("downloadDocument dowload html done");	
 		        String html = driver.getPageSource();
 		        driver.quit();
 

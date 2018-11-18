@@ -73,9 +73,10 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 
 
 			        System.setProperty("webdriver.chrome.driver","C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
+					System.out.printf("initializeJapaneseDocument dowload html start");	
 			        WebDriver driver = new ChromeDriver();
 			        driver.get(urlOfCurrentPage);
-
+					System.out.printf("initializeJapaneseDocument dowload html done");	
 			        String html = driver.getPageSource();
 			        document = Jsoup.parse(html);
 							// TODO Auto-generated catch block
@@ -380,9 +381,10 @@ public class JavBusParsingProfile extends SiteParsingProfile implements Specific
 		ArrayList<SearchResult> linksList = new ArrayList<>();
 		try{
 	        System.setProperty("webdriver.chrome.driver","C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe");
+			System.out.printf("getSearchResults dowload html start");	
 	        WebDriver driver = new ChromeDriver();
 	        driver.get(searchString);
-	        System.out.printf("dowload html done");	
+	        System.out.printf("getSearchResults dowload html done");	
 	        String html = driver.getPageSource();
 	        Document doc = Jsoup.parse(html);
 
